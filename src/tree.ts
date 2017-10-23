@@ -9,7 +9,7 @@ export default class Tree {
   private z: number;
   public deep: number = 0;
   private settings: { [key: string]: any } = {
-    thicknessratio: 40,	//length-to-thickness ration for branches
+    endwidth: 0.005,	//last branches width
     levels: 5,  //main trunk parts, each section has outgrowing subbranches
     depth: 5,  //max recursion depth of sub-subbranches
     branches: [1, 1, true],	//first-level branches
@@ -60,6 +60,15 @@ export default class Tree {
       this.branches[i].render(document.querySelector('a-scene'));
     }
   }
+
+	public polyratio(ratio:number):number {
+		var value:number = 0;
+		var poly = this.s('shape').poly;
+		for (var i = 0; i < poly.length; i++) {
+			value += poly[i] * Math.pow(ratio, i);
+		}
+		return value;
+	}
 
   public s(key: string) {
     var val = this.settings[key.toLowerCase()];

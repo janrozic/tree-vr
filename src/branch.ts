@@ -13,6 +13,7 @@ export default class Branch {
     private start: Vector,
     private direction: Vector,
     private parent: Branch | Tree,
+    public section: number = 0,
   ) {
     this.deep = parent.deep + 1;
     this.parent.addbranch(this);
@@ -34,6 +35,10 @@ export default class Branch {
     }
     var endpoint = this.start.clone();
 		var sumlength:number = 0;
+    var radiae = [];
+    for (let i = 0; i < this.sections.length; i++) {
+      radiae[i] = Math.sqrt(this.score(i)) * this.s('endwidth');
+    }
     for (let i = 0; i < this.sections.length; i++) {
       let section = this.sections[i];
 			let r:number = section.r;
@@ -45,17 +50,16 @@ export default class Branch {
 			if (r <= 0) {
 				break;
 			}
-			let radius:number = this.long / this.s('thicknessratio');
-			if (radius < 0.01) {
+			if (!radiae[i]) {
 				continue;
 			}
 			let halfsection = section.clone().setLength(r/2);
       let element:Element = document.createElement('a-cone');
       element.setAttribute('height', String(r));
       element.setAttribute('segments-height', '1');
-      element.setAttribute('segments-radial', String(Math.min(3, Math.max(3, Math.floor(100*radius)))));
-      element.setAttribute('radius-top', String(0.7*radius));
-      element.setAttribute('radius-bottom', String(radius));
+      element.setAttribute('segments-radial', String(Math.min(16, Math.max(3, Math.floor(100*radiae[i])))));
+      element.setAttribute('radius-top', String(radiae[i]));
+      element.setAttribute('radius-bottom', String(i ? radiae[i-1] : radiae[i]));
       element.setAttribute('color', '#a36859');
       //add half section
       endpoint.add(halfsection);
@@ -84,20 +88,28 @@ export default class Branch {
 			if (ratio > 1) {
 				subgrowth = -b.long;
 			} else {
-				subgrowth = meters * a.polyratio(ratio);
+				subgrowth = meters * a.tree().polyratio(ratio);
 			}
 			b.grow(subgrowth);
 		});
 	}
-	
-	public polyratio(ratio:number):number {
-		var value:number = 0;
-		var poly = this.s('shape').poly;
-		for (var i = 0; i < poly.length; i++) {
-			value += poly[i] * Math.pow(ratio, i);
-		}
-		return value;
-	}
+
+  public score(i:number = 0):number {
+    var base:number =
+      this.branches
+      .filter(function (branch) {
+        return branch.section === i;
+      })
+      .reduce(
+        function (sum, branch) {return sum + branch.score();},
+        0
+      )
+    ;
+    if (i <= this.sections.length - 1) {
+      base += this.score(i+1);
+    }
+    return base ? base : (this.long > (this.s('endwidth') * 2) ? 1 : 0);
+  }
 
   public populate(levels: number) {
     //set sections
@@ -128,6 +140,7 @@ export default class Branch {
           endpoint.clone(),
           out,
           this,
+          i,
         ).populate(Math.max(1, levels - 1));
       }
     }

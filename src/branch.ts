@@ -64,7 +64,7 @@ export default class Branch {
       //add half section
       endpoint.add(halfsection);
       //add place center
-      element.setAttribute('position', endpoint.x + ' ' + endpoint.y + ' ' + (endpoint.z - 3));
+      element.setAttribute('position', endpoint.x + ' ' + endpoint.y + ' ' + (endpoint.z));
       //add half section
       endpoint.add(halfsection);
       element.setAttribute('rotation', section.phi + ' ' + section.theta + ' 0',);

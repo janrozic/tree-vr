@@ -1,5 +1,6 @@
 import Vector from './Vector';
 import Branch from './Branch';
+import './growable';
 import * as H from './Helpers';
 
 export default class Tree {
@@ -7,6 +8,7 @@ export default class Tree {
 	private firstlevel: Branch[] = [];
   private x: number;
   private z: number;
+	private element: Element;
   public deep: number = 0;
   private settings: { [key: string]: any } = {
     endwidth: 0.005,	//last branches width
@@ -53,11 +55,20 @@ export default class Tree {
     this.populate();
     this.x = x;
     this.z = z;
+		if (!this.element) {
+			this.element = document.createElement('a-entity');
+			Object(this.element).tree = this;
+			this.element.setAttribute('growable', this.s('height'));
+		}
+		this.element.setAttribute('position', this.x + ' 0 ' + (this.z));
   }
 
   public render() {
+		if (!this.element.parentNode) {
+			document.querySelector('a-scene').appendChild(this.element);
+		}
     for (let i = 0; i < this.branches.length; i++) {
-      this.branches[i].render(document.querySelector('a-scene'));
+      this.branches[i].render(this.element);
     }
   }
 

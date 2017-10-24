@@ -31,7 +31,11 @@ export default class Branch {
     for (let i = 0; i < this.elements.length; i++) {
       if (this.elements[i] && this.elements[i].parentNode) {
         this.elements[i].parentNode.removeChild(this.elements[i]);
+        //delete this.elements[i];  //I'm not sure whether it reduces or increases complexity...
       }
+    }
+    if (this.long <= 0) {
+      return;
     }
     var endpoint = this.start.clone();
 		var sumlength:number = 0;
@@ -45,13 +49,9 @@ export default class Branch {
 			sumlength += section.r;
 			if (sumlength > this.long) {
 				r = this.long - sumlength + r;
-				i = this.sections.length;	//got to end of loop
 			}
-			if (r <= 0) {
+			if (r <= 0 || !radiae[i]) {
 				break;
-			}
-			if (!radiae[i]) {
-				continue;
 			}
 			let halfsection = section.clone().setLength(r/2);
       let element:Element = document.createElement('a-cone');
@@ -70,6 +70,9 @@ export default class Branch {
       element.setAttribute('rotation', section.phi + ' ' + section.theta + ' 0',);
       root.appendChild(element);
       this.elements[i] = element;
+      if (sumlength >= this.long) {
+        break;
+      }
     }
   }
 	
@@ -90,6 +93,7 @@ export default class Branch {
 			} else {
 				subgrowth = meters * a.tree().polyratio(ratio);
 			}
+      subgrowth = Math.min(subgrowth, meters);  //do not grow more than the parent branch
 			b.grow(subgrowth);
 		});
 	}

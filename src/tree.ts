@@ -1,6 +1,6 @@
 import Vector from './Vector';
 import Branch from './Branch';
-import './growable';
+import './growable.js';
 import * as H from './Helpers';
 
 export default class Tree {
@@ -8,7 +8,7 @@ export default class Tree {
 	private firstlevel: Branch[] = [];
   private x: number;
   private z: number;
-	private element: Element;
+	private element: H.AframeElement;
   public deep: number = 0;
   private settings: { [key: string]: any } = {
     endwidth: 0.005,	//last branches width
@@ -59,6 +59,19 @@ export default class Tree {
 			this.element = document.createElement('a-entity');
 			Object(this.element).tree = this;
 			this.element.setAttribute('growable', this.s('height'));
+        this.element.setAttribute('geometry', {
+        primitive:'cylinder',
+        radius:1,
+        height:0.05,
+        segmentsHeight:1,
+      });
+			this.element.setAttribute('material', {
+        shader: 'flat',
+        color: 'blue',
+        transparent: true,
+        opacity: 0.25,
+        visible:false,
+      });
 		}
 		this.element.setAttribute('position', this.x + ' 0 ' + (this.z));
   }

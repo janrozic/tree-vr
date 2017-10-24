@@ -10,9 +10,9 @@ export default class Tree {
   private position:Vector;
   public deep: number = 0;
   private settings: { [key: string]: any } = {
-    endwidth: 0.005,	//last branches width
-    levels: 5,  //main trunk parts, each section has outgrowing subbranches
-    depth: 5,  //max recursion depth of sub-subbranches
+    endwidth: 0.008,	//last branches width
+    levels: 6,  //main trunk parts, each section has outgrowing subbranches
+    depth: 6,  //max recursion depth of sub-subbranches
     branches: [1, 1, true],	//first-level branches
     subbranches: [1, 3, true],	//outgrowing branches at each point
     bend: [0, 15, false],	//bend of each branch section

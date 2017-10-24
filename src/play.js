@@ -6,6 +6,7 @@ import Vector from './Vector';
 AFRAME.registerComponent('plantable', {
 	init: function () {
     var scene = this.el.sceneEl;
+		var controls = document.querySelector('[universal-controls]');
     var disk = document.createElement('a-entity');
     var basis = new Vector().setFromObject(this.el.getAttribute('position'));
     disk.setAttribute('geometry', {
@@ -29,20 +30,28 @@ AFRAME.registerComponent('plantable', {
     });
     scene.appendChild(disk);
 		disk.addEventListener('mouseleave', function () {
-      disk.setAttribute('material', 'visible', true);
+      disk.setAttribute('material', 'visible', false);
+			//controls.setAttribute('universal-controls', 'movementControls', ['gamepad', 'keyboard', 'touch', 'hmd']);
+			controls.setAttribute('universal-controls', 'movementEnabled', true);
+		});
+		disk.addEventListener('mouseenter', function () {
+			disk.setAttribute('material', 'visible', true);
+			//controls.setAttribute('movementControls', ['gamepad', 'keyboard', 'hmd']);
+			controls.setAttribute('universal-controls', 'movementEnabled', false);
 		});
 		this.el.addEventListener('raycaster-intersected', function (evt) {
       if (evt.detail.intersection.distance > 5) {
         disk.setAttribute('material', 'visible', false);
       } else {
-      //var p = new Vector().setFromObject(evt.detail.intersection.point).sub(basis);
         var p = new Vector().setFromObject(evt.detail.intersection.point);
         disk.setAttribute('position', {
           x: p.x,
           y: p.y,
           z: p.z,
         });
-        disk.setAttribute('material', 'visible', true);
+				if (!disk.getAttribute('material').visible) {
+					disk.emit('mouseenter');
+				}
       }
 		});
   }

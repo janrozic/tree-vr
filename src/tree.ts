@@ -65,9 +65,9 @@ export default class Tree {
       });
 			this.element.setAttribute('material', {
         shader: 'flat',
-        color: 'blue',
+        color: 'green',
         transparent: true,
-        opacity: 0.25,
+        opacity: 0.7,
         visible:false,
       });
 		}

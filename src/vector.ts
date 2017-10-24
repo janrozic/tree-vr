@@ -66,6 +66,14 @@ export default class Vector {
     return this;
   }
 
+  public setFromObject(xyz: {[key: string]:any}): Vector {
+    this._x = xyz.x;
+    this._y = xyz.y;
+    this._z = xyz.z;
+    this.recalculateFrom3();
+    return this;
+  }
+
   public store(): {[key: string]:any} {
     return {
       x: this._x,
@@ -100,6 +108,12 @@ export default class Vector {
 
   public add(vector: Vector): Vector {
     this.vector.add(vector.getSafe());
+    this.recalculate();
+    return this;
+  }
+
+  public sub(vector: Vector): Vector {
+    this.vector.sub(vector.getSafe());
     this.recalculate();
     return this;
   }

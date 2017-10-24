@@ -60,7 +60,9 @@ export default class Branch {
       element.setAttribute('segments-radial', String(Math.min(16, Math.max(3, Math.floor(100*radiae[i])))));
       element.setAttribute('radius-top', String(radiae[i]));
       element.setAttribute('radius-bottom', String(i ? radiae[i-1] : radiae[i]));
-      element.setAttribute('color', '#a36859');
+      element.setAttribute('color', '#8e7a72');
+      element.setAttribute('src', '#barkTexture');
+      element.setAttribute('repeat', Math.ceil(radiae[i]/0.1 + 0.1) + ' ' + Math.ceil(r/0.2));
       //add half section
       endpoint.add(halfsection);
       //add place center
@@ -71,6 +73,17 @@ export default class Branch {
       root.appendChild(element);
       this.elements[i] = element;
       if (sumlength >= this.long) {
+        //add leaf
+        var leaf = document.createElement('a-plane');
+        leaf.setAttribute('width', '0.05');
+        leaf.setAttribute('height', '0.1');
+        leaf.setAttribute('color', '#3a5f0b');
+        leaf.setAttribute('position', '0 ' + String(r/2) + ' 0');
+        leaf.setAttribute('rotation', '0 0 90');
+        leaf.setAttribute('side', 'double');
+        element.addEventListener('loaded', function (evt) {
+          evt.srcElement.appendChild(leaf);
+        });
         break;
       }
     }

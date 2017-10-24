@@ -1,5 +1,5 @@
 export interface AframeElement extends HTMLElement {
-  setAttribute(type: string, newValue: any): void;
+  setAttribute(type: string, newValue: any, value?: any): void;
 }
 
 export function randomrange(min:number, max:number, int:boolean):number {

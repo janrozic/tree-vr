@@ -6,9 +6,8 @@ import * as H from './Helpers';
 export default class Tree {
   private branches: Branch[] = [];
 	private firstlevel: Branch[] = [];
-  private x: number;
-  private z: number;
 	private element: H.AframeElement;
+  private position:Vector;
   public deep: number = 0;
   private settings: { [key: string]: any } = {
     endwidth: 0.005,	//last branches width
@@ -51,10 +50,9 @@ export default class Tree {
     }
   }
 
-  public place(x: number, z: number) {
+  public place(scene: HTMLElement, position:Vector):Tree {
+    this.position = position;
     this.populate();
-    this.x = x;
-    this.z = z;
 		if (!this.element) {
 			this.element = document.createElement('a-entity');
 			Object(this.element).tree = this;
@@ -73,16 +71,16 @@ export default class Tree {
         visible:false,
       });
 		}
-		this.element.setAttribute('position', this.x + ' 0 ' + (this.z));
+		this.element.setAttribute('position', position.x + ' ' + position.y + ' ' + position.z);
+    scene.appendChild(this.element);
+    return this;
   }
 
-  public render() {
-		if (!this.element.parentNode) {
-			document.querySelector('a-scene').appendChild(this.element);
-		}
+  public render():Tree {
     for (let i = 0; i < this.branches.length; i++) {
       this.branches[i].render(this.element);
     }
+    return this;
   }
 
 	public polyratio(ratio:number):number {
@@ -124,16 +122,14 @@ export default class Tree {
   public store(): {[key: string]:any} {
     return {
       b: this.firstlevel.map(b => b.store()),
-      x: this.x,
-      z: this.z,
+      p: this.position.store(),
       s: this.settings,
     };
   }
   
   public restore(data: {[key: string]:any}): Tree {
     this.settings = data.s;
-    this.x = data.x;
-    this.z = data.z;
+    this.position = new Vector().restore(data.p);
     var self = this;
     data.b.map(
     (b:{[key: string]:any}) =>

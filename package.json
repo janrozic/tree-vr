@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "watch": "webpack --progress --watch --display-modules",
-    "start": "webpack-dev-server --open --host 192.168.0.103"
+    "start": "webpack-dev-server --open",
+    "start-ip": "webpack-dev-server --open --host 192.168.0.103"
   },
   "author": "",
   "license": "ISC",

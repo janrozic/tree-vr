@@ -45,8 +45,9 @@ export default class Tree {
           this.s('bend'),
           rotation + 360*(i+1)/trunkcount
         ),
-        this
-      ).populate(this.s('levels'));
+        this,
+        this.s('levels'),
+      );
     }
   }
 
@@ -136,7 +137,8 @@ export default class Tree {
     new Branch(
         new Vector().restore(b.s),
         new Vector().restore(b.d),
-        self
+        self,
+        this.s('levels'),
       ).restore(b)
     );
     return this;

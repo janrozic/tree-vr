@@ -13,6 +13,7 @@ export default class Branch {
     private start: Vector,
     private direction: Vector,
     private parent: Branch | Tree,
+    private levels: number,
     public section: number = 0,
   ) {
     this.deep = parent.deep + 1;
@@ -96,6 +97,9 @@ export default class Branch {
 		if (this.long === previous) {
 			return;
 		}
+    if (this.long && this.sections.length < this.levels) {
+      this.populate();
+    }
 		var a:Branch = this;
 		this.branches.forEach(function (b:Branch) {
 			var out:number = b.start.distanceTo(a.start);
@@ -128,11 +132,11 @@ export default class Branch {
     return base ? base : (this.long > (this.s('endwidth') * 2) ? 1 : 0);
   }
 
-  public populate(levels: number) {
+  public populate() {
     //set sections
-    for (let i = 0; i < levels; i++) {
+    for (let i = 0; i < this.levels; i++) {
       this.sections[this.sections.length] = new Vector()
-        .setFromSpherical(this.direction.r / levels, this.s('bend'), Math.random() * 360)
+        .setFromSpherical(this.direction.r / this.levels, this.s('bend'), Math.random() * 360)
         .addRotation(this.direction)
       ;
     }
@@ -157,8 +161,9 @@ export default class Branch {
           endpoint.clone(),
           out,
           this,
+          Math.max(1, this.levels - 1),
           i,
-        ).populate(Math.max(1, levels - 1));
+        );
       }
     }
   }
@@ -175,6 +180,8 @@ export default class Branch {
     return {
       b: this.branches.map(b => b.store()),
       l: this.long,
+      i: this.section,
+      ls: this.levels,
       s: this.start.store(),
       d: this.direction.store(),
       cs: this.sections.map((v: Vector) => v.store()),
@@ -190,7 +197,9 @@ export default class Branch {
       new Branch(
         new Vector().restore(b.s),
         new Vector().restore(b.d),
-        self
+        self,
+        b.ls,
+        b.i,
       ).restore(b)
     );
     return this;

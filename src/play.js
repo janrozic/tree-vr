@@ -3,6 +3,25 @@ import 'aframe-extras/dist/aframe-extras.controls';
 import Tree from './Tree';
 import Vector from './Vector';
 
+(function (AFRAME) {
+var controls = AFRAME.components['touch-controls'].Component.prototype;
+var protoInit = controls.init;
+controls.init = function () {
+  protoInit.bind(this)();
+  var self = this;
+  this.el.addEventListener('raycaster-intersection', function (e) {
+    var distance = e.detail.intersections[0].distance;
+    if (distance < self.el.getAttribute('raycaster').far) {
+      self.data.enabled = false;
+    } else {
+      self.data.enabled = true;
+    }
+  });
+  this.el.addEventListener('raycaster-intersection-cleared', function (e) {
+    self.data.enabled = true;
+  });
+};
+
 AFRAME.registerComponent('plantable', {
 	init: function () {
     var scene = this.el.sceneEl;
@@ -29,18 +48,21 @@ AFRAME.registerComponent('plantable', {
       new Tree().place(scene, new Vector().setFromObject(point)).render();
     });
     scene.appendChild(disk);
-		disk.addEventListener('mouseleave', function () {
+		/*disk.addEventListener('mouseleave', function () {
       disk.setAttribute('material', 'visible', false);
 			//controls.setAttribute('universal-controls', 'movementControls', ['gamepad', 'keyboard', 'touch', 'hmd']);
-			controls.setAttribute('universal-controls', 'movementEnabled', true);
+			//controls.setAttribute('universal-controls', 'movementEnabled', true);
 		});
 		disk.addEventListener('mouseenter', function () {
 			disk.setAttribute('material', 'visible', true);
 			//controls.setAttribute('movementControls', ['gamepad', 'keyboard', 'hmd']);
-			controls.setAttribute('universal-controls', 'movementEnabled', false);
-		});
+			//controls.setAttribute('universal-controls', 'movementEnabled', false);
+		});*/
+		this.el.addEventListener('raycaster-intersected-cleared', function (evt) {
+      disk.setAttribute('material', 'visible', false);
+    });
 		this.el.addEventListener('raycaster-intersected', function (evt) {
-      if (evt.detail.intersection.distance > 5) {
+      if (evt.detail.intersection.distance > evt.detail.el.getAttribute('raycaster').far) {
         disk.setAttribute('material', 'visible', false);
       } else {
         var p = new Vector().setFromObject(evt.detail.intersection.point);
@@ -50,9 +72,12 @@ AFRAME.registerComponent('plantable', {
           z: p.z,
         });
 				if (!disk.getAttribute('material').visible) {
-					disk.emit('mouseenter');
+					disk.setAttribute('material', 'visible', true);
 				}
       }
 		});
   }
 });
+
+
+})(AFRAME);

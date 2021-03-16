@@ -15,10 +15,10 @@ export default class Tree {
     depth: 6,  //max recursion depth of sub-subbranches
     branches: [1, 1, true],	//first-level branches
     subbranches: [1, 3, true],	//outgrowing branches at each point
-    bend: [0, 15, false],	//bend of each branch section
-    outbend: [20, 50],	//bend of subbranches
+    bend: [0, 25, false],	//bend of each branch section
+    outbend: [20, 80],	//bend of subbranches
     height: 3,	//max height
-    firmness: 1,	//branch weight support capability ... between 0 and 1 ... 0=rambling; 1=tree
+    firmness: 0.7,	//branch weight support capability ... between 0 and 1 ... 0=rambling; 1=tree
     verticalaffinity: 0.3, //how much branches prefer to grow upwards ... between 0 and 1 ... 0=don't care ... 1=only up
     growthrate: 1, //metres/year
     fullgrown: 1500,

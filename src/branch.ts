@@ -63,6 +63,7 @@ export default class Branch {
       element.setAttribute('radius-bottom', String(i ? radiae[i-1] : radiae[i]));
       element.setAttribute('color', '#8e7a72');
       element.setAttribute('src', '#barkTexture');
+      element.setAttribute('material', 'roughness:1;metalness:0;');
       element.setAttribute('repeat', Math.ceil(radiae[i]/0.1 + 0.1) + ' ' + Math.ceil(r/0.2));
       //add half section
       endpoint.add(halfsection);

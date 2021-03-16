@@ -8,20 +8,22 @@
 		<script src="dist/bundle.js"></script>
   </head>
   <body>
-		<a-scene stats>
+		<a-scene stats garden>
 			<a-entity
 				universal-controls
-				raycaster="far:7"
+				raycaster="far:7;"
         cursor="fuse:false"
 				camera="userHeight: 1.6">
-				<!--<a-cursor fuse="false"></a-cursor>-->
+				<a-cursor fuse="false"></a-cursor>
 			</a-entity>
 			<a-assets>
 				<img id="grassTexture" crossorigin="anonymus" src="img/grass.jpg">
 				<img id="barkTexture" crossorigin="anonymus" src="img/bark.jpg">
+				<img id="placeIcon" crossorigin="anonymus" src="img/place.png">
 			</a-assets>
-      <a-plane plantable rotation="-90 0 0" width="100" height="100" color="#7BC8A4" src="#grassTexture" repeat="50 100"></a-plane>
+      <a-plane focustarget plantable rotation="-90 0 0" width="100" height="100" color="#7BC8A4" src="#grassTexture" repeat="50 100"></a-plane>
       <a-sky color="#87CEEB"></a-sky>
+      <a-menu tools="water,place,test"></a-menu>
     </a-scene>
   </body>
 </html>
